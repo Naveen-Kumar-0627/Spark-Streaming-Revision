@@ -35,15 +35,54 @@
 
 
  ## Output Modes 
- ### 1.append 
+ ### 1.Append Mode 
     - just new rows are added ,existing rows not touched ,not changed
     -example
        - id ,name
          1  ,a
          2  ,b
-         new row 2,c
+         new batch >> 3,c
          1,a
          2,b
-         2,c
-### 2.         
+         3,c --appended
+### 2.Complete Mode
+    - For every single batch spark rewrites entire output for every time,every row,even rows are not changed
+    -example 
+    batch 1 
+       id
+       c1
+       c1
+       d2
+       df.group('id').count()
+       output table 
+       id,count
+       c1,2
+       d2,1
+    batch 2
+        id 
+        c1
+        output 
+        id ,count
+        c1,3
+        c2,1 <-- rewritten even not changed
+### 3.update mode
+- only writes which are is changed
+   example 
+       batch 1 
+       id
+       c1
+       c1
+       d2
+       df.group('id').count()
+       output table 
+       id,count
+       c1,2
+       d2,1
+    batch 2
+        id 
+        c1
+        output 
+        id ,count
+        c1,3  -- this only updated 
+        c2,1 -- not changed
  
